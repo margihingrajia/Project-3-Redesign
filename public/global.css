@@ -1,0 +1,14 @@
+:root {
+  --bg: #ffffff;
+  --text: #0f172a;
+}
+
+html, body, #app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
