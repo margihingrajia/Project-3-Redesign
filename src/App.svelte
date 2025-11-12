@@ -1,17 +1,33 @@
 <script>
   import Homepage from './components/Homepage.svelte';
+  import Filter from './components/Filter.svelte';
   import ApartmentHousing from './pages/ApartmentHousing.svelte';
-  let count = 0;
 
-  // simple hash-based route state
   let route = window.location.hash || '';
   const onHashChange = () => (route = window.location.hash || '');
   window.addEventListener('hashchange', onHashChange);
+
+  let apartmentFilters = null;
+
+  const cities = ['CityA', 'CityB'];
+
+  function onFilterChange(event) {
+    apartmentFilters = event.detail;
+  }
 </script>
 
 <main>
   {#if route === '#/apartment-housing'}
-    <ApartmentHousing />
+    <div style="display:flex; gap:1rem; align-items:flex-start;">
+
+      <div style="width:72px; display:flex; align-items:flex-start; justify-content:center;">
+        <Filter on:change={onFilterChange} cities={cities} initial={apartmentFilters} />
+      </div>
+
+      <section style="flex:1;">
+        <ApartmentHousing filters={apartmentFilters} />
+      </section>
+    </div>
   {:else}
     <h1>Project 3 Redesign</h1>
 
