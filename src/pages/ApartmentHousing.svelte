@@ -28,15 +28,6 @@
 
   <div class="filters">
     <input placeholder="Search by title or city" bind:value={q} />
-    <label>
-      Min beds
-      <select bind:value={minBeds}>
-        <option value="0">Any</option>
-        <option value="1">1+</option>
-        <option value="2">2+</option>
-        <option value="3">3+</option>
-      </select>
-    </label>
   </div>
 
   <ul>

@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
+  import { fly } from "svelte/transition";
 
   const dispatch = createEventDispatcher();
 
@@ -47,10 +48,10 @@
 
   // dummy price chart data
   const priceChartOptions = [
-    { id: 1, label: "< $1k", min: 0, max: 999 },
+    { id: 1, label: "< $1k", min: null, max: 999 },
     { id: 2, label: "$1k - $2k", min: 1000, max: 1999 },
     { id: 3, label: "$2k - $3k", min: 2000, max: 2999 },
-    { id: 4, label: "$3k+", min: 3000, max: 999999 },
+    { id: 4, label: "$3k+", min: 3000, max: null },
   ];
   let selectedChart = null;
 
@@ -219,36 +220,63 @@
     }
     emitChange();
   }
+
+  // section-applied reactive flags
+  $: locationApplied =
+    (miles !== "" && miles != null) || (zip !== "" && zip != null);
+  $: priceApplied =
+    (priceMin !== "" && priceMin != null) ||
+    (priceMax !== "" && priceMax != null) ||
+    selectedChart !== null;
+  $: sqftApplied =
+    (sqftMin !== "" && sqftMin != null) || (sqftMax !== "" && sqftMax != null);
+  $: bedsBathsApplied = Number(beds) > 0 || Number(baths) > 0;
+  $: propertyOptionsApplied = !!(
+    housingType ||
+    rentPeriod ||
+    laundry ||
+    parking
+  );
+  $: amenitiesApplied = Object.values(amenities).some(Boolean);
+  $: openHouseApplied = !!openHouseDate;
+  $: popularResultsApplied =
+    !!popularSearch || Object.values(resultOptions).some(Boolean);
+
+  $: appliedCount = [
+    locationApplied,
+    priceApplied,
+    sqftApplied,
+    bedsBathsApplied,
+    propertyOptionsApplied,
+    amenitiesApplied,
+    openHouseApplied,
+    popularResultsApplied,
+  ].filter(Boolean).length;
 </script>
 
 <button
-  class="filter-icon"
+  class="filter-btn"
   aria-label="Open filters"
   on:click={openOverlay}
   title="Filters"
 >
-  <!-- filter SVG -->
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >
-    <path d="M22 3H2l7 9v7l6-3v-4l7-9z"></path>
-  </svg>
+  <span class="label">Filters</span>
+  {#if appliedCount > 0}
+    <span class="badge" aria-hidden="true">{appliedCount}</span>
+  {/if}
 </button>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 {#if open}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div class="overlay" role="dialog" aria-modal="true" on:click={backdropClick}>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div class="modal" on:click|stopPropagation>
+    <div
+      class="modal"
+      on:click|stopPropagation
+      transition:fly={{ x: -800, duration: 320 }}
+    >
       <header class="modal-header">
         <h3>Filters</h3>
         <div class="actions">
@@ -262,9 +290,9 @@
       </header>
 
       <div class="modal-body">
-        <!-- extended filter UI -->
+        <!-- filter UI -->
         <div class="filter-grid">
-          <!-- 1. Miles from location / Zip -->
+          <!-- Miles -->
           <section class="section">
             <h4>Location</h4>
             <div class="field-row">
@@ -290,7 +318,7 @@
             </div>
           </section>
 
-          <!-- 2. Price (min - max) + chart selection -->
+          <!-- Price (min - max) -->
           <section class="section">
             <h4>Price</h4>
             <div class="field-row">
@@ -335,9 +363,9 @@
             </div>
           </section>
 
-          <!-- 3. Sqft -->
+          <!-- Square feet -->
           <section class="section">
-            <h4>Sqft</h4>
+            <h4>Square feet (sqft)</h4>
             <div class="field-row">
               <label>
                 Min sqft
@@ -441,77 +469,97 @@
           <section class="section">
             <h4>Amenities</h4>
             <div class="checkbox-grid">
-              <label
-                ><input
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.petsOk}
                   on:change={() => emitChange()}
-                /> Pets OK</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Pets OK</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.furnished}
                   on:change={() => emitChange()}
-                /> Furnished</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Furnished</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.noSmoking}
                   on:change={() => emitChange()}
-                /> No Smoking</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">No Smoking</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.wheelchair}
                   on:change={() => emitChange()}
-                /> Wheelchair accessible</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Wheelchair accessible</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.ac}
                   on:change={() => emitChange()}
-                /> Air conditioning</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Air conditioning</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.evCharging}
                   on:change={() => emitChange()}
-                /> EV charging</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">EV charging</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.noBrokerFee}
                   on:change={() => emitChange()}
-                /> No broker fee</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">No broker fee</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={amenities.noApplicationFee}
                   on:change={() => emitChange()}
-                /> No application fee</label
-              >
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">No application fee</span>
+              </label>
             </div>
           </section>
 
           <!-- 7. Open House Date -->
           <section class="section">
-            <h4>Open House</h4>
+            <h4>Open House Date</h4>
             <div class="field-row">
-              <label>
-                Open house date
                 <input
                   type="date"
                   bind:value={openHouseDate}
                   on:input={() => emitChange()}
                 />
-              </label>
             </div>
           </section>
 
@@ -519,8 +567,6 @@
           <section class="section">
             <h4>Quick picks & results</h4>
             <div class="field-row">
-              <label>
-                Popular searches
                 <select
                   bind:value={popularSearch}
                   on:change={() => emitChange()}
@@ -531,38 +577,48 @@
                   <option>Two bedroom near downtown</option>
                   <option>Pet friendly</option>
                 </select>
-              </label>
             </div>
 
             <div class="checkbox-grid">
-              <label
-                ><input
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={resultOptions.titlesOnly}
                   on:change={() => emitChange()}
-                /> Search titles only</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Search titles only</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={resultOptions.hasImage}
                   on:change={() => emitChange()}
-                /> Has image</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Has image</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={resultOptions.postedToday}
                   on:change={() => emitChange()}
-                /> Posted today</label
-              >
-              <label
-                ><input
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Posted today</span>
+              </label>
+
+              <label class="chk">
+                <input
                   type="checkbox"
                   bind:checked={resultOptions.showDuplicates}
                   on:change={() => emitChange()}
-                /> Show duplicates</label
-              >
+                />
+                <span class="box" aria-hidden="true"></span>
+                <span class="lbl">Show duplicates</span>
+              </label>
             </div>
           </section>
         </div>
@@ -570,7 +626,7 @@
 
       <footer class="modal-footer">
         <div class="left-actions">
-          <button class="reset" type="button" on:click={reset}>Reset</button>
+          <button class="reset" type="button" on:click={reset}>Clear</button>
         </div>
 
         <div class="right-actions">
@@ -584,58 +640,94 @@
 {/if}
 
 <style>
-  .filter-icon {
+  .filter-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
     background: #fff;
     cursor: pointer;
+    font-weight: 500;
   }
-  .filter-icon svg {
+  .filter-btn .label {
     color: #0f172a;
+  }
+  .filter-btn .badge {
+    display: inline-flex;
+    min-width: 15px;
+    height: 20px;
+    padding: 0 6px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: darkcyan;
+    color: #fff;
+    font-size: 0.85rem;
+    line-height: 1;
   }
 
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(2, 6, 23, 0.55);
+    background: rgba(2, 6, 23, 0.35);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: flex-start;
     z-index: 1000;
-    padding: 1rem;
+    padding: 0;
   }
+
   .modal {
-    width: 100%;
-    max-width: 720px;
+    width: min(420px, 95vw);
+    max-width: 420px;
+    height: 100vh;
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.2);
+    box-shadow: 6px 0 30px rgba(2, 6, 23, 0.2);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
+
   .modal-header {
+    padding: 0.5rem 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 5px 0 15px;
-    border-bottom: 1px solid #eef2f7;
+    background-color: sandybrown;
   }
+
+  .modal-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .close {
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 0;
+  }
+
   .modal-body {
     padding: 1rem;
-    max-height: 450px;
     overflow-y: auto;
+    max-height: calc(100vh - 120px);
   }
+
+  .filter-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
   .modal-footer {
-    display: flex;
+    padding: 0.6rem 0.75rem;
+    gap: 0.5rem;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border-top: 1px solid #eef2f7;
   }
 
   .actions {
@@ -644,10 +736,9 @@
     align-items: center;
   }
   .reset {
-    background: transparent;
-    border: 1px solid #e6eef5;
-    padding: 0.35rem 0.6rem;
     border-radius: 4px;
+    background-color: #eef2f7;
+    padding: 0.35rem 0.6rem;
     cursor: pointer;
   }
   .close {
@@ -655,26 +746,18 @@
     border: none;
     font-size: 1rem;
     cursor: pointer;
+    margin-left: 0;
   }
   .apply {
     padding: 0.5rem 0.8rem;
     border-radius: 4px;
-    border: 1px solid #0f172a;
-    background: #0f172a;
-    color: #fff;
     cursor: pointer;
+    background-color: sandybrown;
+    font-weight: 600;
   }
 
-  /* layout for extended filter body */
-  .filter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem;
-  }
   .section {
-    border-radius: 6px;
     padding: 0.5rem;
-    background: #fafafa;
   }
   .section h4 {
     margin: 0 0 0.5rem 0;
@@ -732,11 +815,121 @@
     font-size: 0.9rem;
   }
 
-  /* keep modal footer left/right layout */
   .modal-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-top: 1px solid #eef2f7;
+  }
+
+  /* Add subtle separator lines between sections */
+  .section + .section {
+    border-top: 0.3px solid gray;
+    margin-top: 0.6rem;
+    padding-top: 0.75rem;
+  }
+
+  /* Rounded box + animation for checkbox controls */
+  .chk {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 160ms ease, transform 120ms ease;
+  }
+
+  /* hide native checkbox but keep it accessible */
+  .chk input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    /* keep pointer events so keyboard focus still works */
+  }
+ 
+  /* visual box */
+  .chk .box {
+    position: relative; /* allow ::after checkmark positioning */
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    flex: 0 0 20px;
+    transition: all 180ms ease;
+    box-shadow: inset 0 0 0 rgba(0,0,0,0);
+    display: inline-block;
+  }
+
+  /* checkmark drawn with borders on a rotated pseudo-element */
+  .chk .box::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border-right: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+    transform: rotate(40deg) scale(0.8);
+    opacity: 0;
+    transition: opacity 180ms ease, transform 200ms ease, border-color 180ms ease;
+  }
+
+  /* show checkmark when checked */
+  .chk input[type="checkbox"]:checked + .box {
+    background: #e6ffed; /* light green */
+    border-color: #34d399; /* green */
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(52,211,153,0.08);
+  }
+  .chk input[type="checkbox"]:checked + .box::after {
+    border-right-color: #065f46;
+    border-bottom-color: #065f46;
+    transform: rotate(40deg) scale(1);
+    opacity: 1;
+  }
+
+  /* checked state: light green background + subtle ticker/pulse animation */
+  .chk input[type="checkbox"]:checked + .box {
+    background: #e6ffed; /* light green */
+    border-color: #34d399; /* green */
+    transform: scale(1.02);
+    box-shadow: 0 0 0 3px rgba(52,211,153,0.08);
+    animation: chk-pulse 420ms ease;
+  }
+
+  /* optional slight hover for the whole label */
+  .chk:hover {
+    background: rgba(15,23,42,0.03);
+  }
+
+  /* checked label text color */
+  .chk input[type="checkbox"]:checked + .box + .lbl {
+    color: #065f46;
+    font-weight: 600;
+  }
+
+  @keyframes chk-pulse {
+    0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(52,211,153,0.08); }
+    60% { transform: scale(1.06); box-shadow: 0 0 0 6px rgba(52,211,153,0.06); }
+    100% { transform: scale(1.02); box-shadow: 0 0 0 3px rgba(52,211,153,0.03); }
+  }
+
+  /* ensure grid spacing still looks good with pill-style labels */
+  .checkbox-grid .chk {
+    display:flex;
+    align-items:center;
+    padding:0.35rem 0.6rem;
+    margin: 0;
+  }
+
+  /* keep responsive layout */
+  @media (max-width: 420px) {
+    .chk { padding: 0.25rem 0.4rem; }
+    .chk .lbl { font-size: 0.9rem; }
   }
 </style>
