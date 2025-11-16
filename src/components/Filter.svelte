@@ -47,7 +47,7 @@
   };
 
   // dummy price chart data
-  const priceChartOptions = [
+  const quickOptions = [
     { id: 1, label: "< $1k", min: null, max: 999 },
     { id: 2, label: "$1k - $2k", min: 1000, max: 1999 },
     { id: 3, label: "$2k - $3k", min: 2000, max: 2999 },
@@ -86,7 +86,7 @@
     });
   }
 
-  // reset all filters
+  // reset filters
   function reset() {
     q = "";
     minBeds = 0;
@@ -137,7 +137,7 @@
       city = initial.city ?? city;
       petsAllowed = initial.petsAllowed ?? petsAllowed;
 
-      // new initial assignments (defensive)
+      // new initial fields
       miles = initial.miles ?? miles;
       zip = initial.zip ?? zip;
       priceMin = initial.priceMin ?? priceMin;
@@ -168,9 +168,9 @@
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  // react to updated initial prop (if parent changes filters)
+  // react to updated initial props
   $: if (initial && open === false) {
-    // update local values to reflect initial when overlay closed (avoid overwriting while user edits)
+    // update local values to reflect initial when overlay closed
     q = initial.q ?? q;
     minBeds = initial.minBeds ?? minBeds;
     maxPrice = initial.maxPrice ?? maxPrice;
@@ -207,7 +207,7 @@
     closeOverlay();
   }
 
-  // helper: select price chart option
+  // Select price chart option
   function selectChart(opt) {
     if (selectedChart && selectedChart.id === opt.id) {
       selectedChart = null;
@@ -351,7 +351,7 @@
             </div>
 
             <div class="chart-row">
-              {#each priceChartOptions as opt}
+              {#each quickOptions as opt}
                 <button
                   type="button"
                   class:selected={selectedChart && selectedChart.id === opt.id}
@@ -390,7 +390,7 @@
             </div>
           </section>
 
-          <!-- 4. Bedrooms / Bathrooms -->
+          <!-- Bedrooms / Bathrooms -->
           <section class="section">
             <h4>Beds / Baths</h4>
             <div class="field-row">
@@ -416,7 +416,7 @@
             </div>
           </section>
 
-          <!-- 5. Dropdowns: housing type, rent period, laundry, parking -->
+          <!-- Housing type, rent period, laundry, parking -->
           <section class="section">
             <h4>Property Options</h4>
             <div class="field-row">
@@ -465,7 +465,7 @@
             </div>
           </section>
 
-          <!-- 6. Amenities checkboxes -->
+          <!-- Amenities checkboxes -->
           <section class="section">
             <h4>Amenities</h4>
             <div class="checkbox-grid">
@@ -551,7 +551,7 @@
             </div>
           </section>
 
-          <!-- 7. Open House Date -->
+          <!-- Open House Date -->
           <section class="section">
             <h4>Open House Date</h4>
             <div class="field-row">
@@ -563,7 +563,7 @@
             </div>
           </section>
 
-          <!-- 8. Popular searches + result properties -->
+          <!-- Quick picks & results -->
           <section class="section">
             <h4>Quick picks & results</h4>
             <div class="field-row">
@@ -630,9 +630,14 @@
         </div>
 
         <div class="right-actions">
-          <button type="button" class="apply" on:click={closeOverlay}
-            >Apply</button
-          >
+          <!-- Filters are emitted on every change; show a saved-as-you-go message -->
+          <div class="saved-msg" aria-live="polite">
+            <!-- simple check icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Filters saved as you go!</span>
+          </div>
         </div>
       </footer>
     </div>
@@ -748,13 +753,20 @@
     cursor: pointer;
     margin-left: 0;
   }
-  .apply {
-    padding: 0.5rem 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    background-color: sandybrown;
+
+  .saved-msg {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #065f46;
+    background: #ecfdf5;
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
     font-weight: 600;
+    font-size: 0.95rem;
   }
+  .saved-msg svg { color: #10b981; }
+  .saved-msg span { display:inline-block; line-height:1; }
 
   .section {
     padding: 0.5rem;
@@ -852,7 +864,7 @@
  
   /* visual box */
   .chk .box {
-    position: relative; /* allow ::after checkmark positioning */
+    position: relative;
     width: 20px;
     height: 20px;
     border-radius: 6px;
@@ -881,8 +893,8 @@
 
   /* show checkmark when checked */
   .chk input[type="checkbox"]:checked + .box {
-    background: #e6ffed; /* light green */
-    border-color: #34d399; /* green */
+    background: #e6ffed;
+    border-color: #34d399;
     transform: scale(1.02);
     box-shadow: 0 0 0 3px rgba(52,211,153,0.08);
   }
@@ -893,16 +905,15 @@
     opacity: 1;
   }
 
-  /* checked state: light green background + subtle ticker/pulse animation */
+  /*light green background + subtle ticker/pulse animation */
   .chk input[type="checkbox"]:checked + .box {
-    background: #e6ffed; /* light green */
-    border-color: #34d399; /* green */
+    background: #e6ffed;
+    border-color: #34d399;
     transform: scale(1.02);
     box-shadow: 0 0 0 3px rgba(52,211,153,0.08);
     animation: chk-pulse 420ms ease;
   }
 
-  /* optional slight hover for the whole label */
   .chk:hover {
     background: rgba(15,23,42,0.03);
   }
