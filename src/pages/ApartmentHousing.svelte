@@ -119,19 +119,21 @@
   }
 
   ul {
-    list-style: none;
-    padding: 0;
-  }
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* ⭐ 4 columns */
+  gap: 1rem; /* spacing between cards */
+}
 
   li {
-    background: var(--card-bg);
-    padding: 1rem;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    margin-bottom: 1rem;
-    transition: 0.15s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  }
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  transition: 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
 
   li:hover {
     transform: translateY(-3px);
