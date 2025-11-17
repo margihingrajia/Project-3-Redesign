@@ -1,10 +1,27 @@
 <script>
+  import Navbar from "./components/Navbar.svelte";
+
   import Homepage from './components/Homepage.svelte';
   import Filter from './components/Filter.svelte';
   import ApartmentHousing from './pages/ApartmentHousing.svelte';
   import ApartmentDetails from './pages/ApartmentDetails.svelte';
 
-  // current hash-based route
+  import Vehicles from './pages/Vehicles.svelte';
+  import VehicleDetails from './pages/VehicleDetails.svelte';
+
+  import Jobs from './pages/Jobs.svelte';
+  import JobDetails from './pages/JobDetails.svelte';
+
+  import ForSale from './pages/ForSale.svelte';
+  import ForSaleDetails from './pages/ForSaleDetails.svelte';
+
+  import Services from './pages/Services.svelte';
+  import ServiceDetails from './pages/ServiceDetails.svelte';
+
+  import More from './pages/More.svelte';
+  import MoreDetails from './pages/MoreDetails.svelte';
+
+  // Current route
   let route = window.location.hash || '';
 
   const onHashChange = () => {
@@ -13,64 +30,68 @@
 
   window.addEventListener('hashchange', onHashChange);
 
-  // filters passed into ApartmentHousing
+  // Filters for Housing
   let apartmentFilters = null;
-
   const cities = ['CityA', 'CityB'];
 
   function onFilterChange(event) {
     apartmentFilters = event.detail;
   }
 
-  // extract dynamic apartment ID when viewing details
-  function getApartmentId() {
-    const match = route.match(/#\/apartment-housing\/details\/(\d+)/);
+  function getId(section) {
+    const match = route.match(new RegExp(`#/${section}/details/(\\d+)`));
     return match ? Number(match[1]) : null;
   }
 </script>
 
+<!-- Navbar always on top -->
+<Navbar {route} />
+
 <main>
   {#if route.startsWith('#/apartment-housing/details/')}
-    <!-- --------------------------
-         DETAILS PAGE
-    --------------------------- -->
-    <ApartmentDetails id={getApartmentId()} />
+    <ApartmentDetails id={getId('apartment-housing')} />
 
   {:else if route === '#/apartment-housing'}
-    <!-- --------------------------
-         LIST + FILTER PAGE
-    --------------------------- -->
     <div class="layout">
-
       <div class="side">
-        <Filter 
-          on:change={onFilterChange} 
-          cities={cities} 
-          initial={apartmentFilters} 
-        />
+        <Filter on:change={onFilterChange} cities={cities} initial={apartmentFilters}/>
       </div>
-
       <section class="content">
-        <ApartmentHousing filters={apartmentFilters} />
+        <ApartmentHousing filters={apartmentFilters}/>
       </section>
     </div>
 
+  {:else if route.startsWith('#/vehicles/details/')}
+    <VehicleDetails id={getId('vehicles')} />
+
+  {:else if route === '#/vehicles'}
+    <Vehicles />
+
+  {:else if route.startsWith('#/jobs/details/')}
+    <JobDetails id={getId('jobs')} />
+
+  {:else if route === '#/jobs'}
+    <Jobs />
+
+  {:else if route.startsWith('#/for-sale/details/')}
+    <ForSaleDetails id={getId('for-sale')} />
+
+  {:else if route === '#/for-sale'}
+    <ForSale />
+
+  {:else if route.startsWith('#/services/details/')}
+    <ServiceDetails id={getId('services')} />
+
+  {:else if route === '#/services'}
+    <Services />
+
+  {:else if route.startsWith('#/more/details/')}
+    <MoreDetails id={getId('more')} />
+
+  {:else if route === '#/more'}
+    <More />
+
   {:else}
-    <!-- --------------------------
-         HOME PAGE
-    --------------------------- -->
-    <h1>Project 3 Redesign</h1>
-
-    <nav>
-      <ul>
-        <li>
-          <button on:click={() => (location.hash = '/apartment-housing')}>
-            Apartment / Housing
-          </button>
-        </li>
-      </ul>
-    </nav>
-
     <Homepage />
   {/if}
 </main>
@@ -84,37 +105,6 @@
     color: #222;
   }
 
-  /* Home */
-  h1 {
-    margin-bottom: 1.2rem;
-    font-size: 1.9rem;
-    color: #4f46e5;
-  }
-
-  nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 0.6rem;
-  }
-
-  nav button {
-    background: #eef0ff;
-    border: 1px solid #c7c9ff;
-    padding: 0.5rem 0.8rem;
-    cursor: pointer;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: 0.2s ease;
-    color: #4f46e5;
-  }
-
-  nav button:hover {
-    background: #4f46e5;
-    color: white;
-  }
-
-  /* Layout for filter + list */
   .layout {
     display: flex;
     gap: 1.4rem;
