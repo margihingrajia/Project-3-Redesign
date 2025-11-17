@@ -1,5 +1,4 @@
 <script>
-  import Homepage from './components/HomePage.svelte';
   import Navbar from "./components/Navbar.svelte";
 
   import Homepage from './components/Homepage.svelte';
