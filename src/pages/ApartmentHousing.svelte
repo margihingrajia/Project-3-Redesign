@@ -1,10 +1,14 @@
 <script>
+  import { onMount } from "svelte";
   import { apartments } from "../data.js";
 
   export let filters = null;
 
   let q = "";
   let minBeds = 0;
+
+  // Store first image paths for each apartment
+  let firstImages = {};
 
   $: filtered = apartments.filter(a => {
     const matchesText =
@@ -25,10 +29,22 @@
   function goBack() {
     location.hash = "";
   }
+
+  // Load first image for each apartment asynchronously
+  onMount(() => {
+    apartments.forEach(async (apt) => {
+      const path = `/apartment${apt.id}/img1.webp`;
+      try {
+        const res = await fetch(path, { method: "HEAD" });
+        if (res.ok) firstImages[apt.id] = path;
+      } catch {
+        firstImages[apt.id] = ""; // fallback if image missing
+      }
+    });
+  });
 </script>
 
 <section>
-  <!-- 🔙 BACK BUTTON restored -->
   <header>
     <button class="back" on:click={goBack}>← Back</button>
     <h2>Apartment / Housing</h2>
@@ -36,21 +52,25 @@
 
   <div class="filters">
     <input placeholder="Search…" bind:value={q} />
-
+    <input type="number" placeholder="Min Beds" min="0" bind:value={minBeds} />
   </div>
 
-  <ul>
+  <div class="cards-container">
     {#each filtered as apt}
-      <li>
-        <h3>{apt.title}</h3>
-        <p class="city">{apt.city}</p>
-
-        <button class="beds" on:click={() => openDetails(apt.id)}>
-          Beds: {apt.beds}
-        </button>
-      </li>
+      <div class="card" on:click={() => openDetails(apt.id)}>
+        {#if firstImages[apt.id]}
+          <img src={firstImages[apt.id]} alt={apt.title} />
+        {:else}
+          <div class="placeholder">No Image</div>
+        {/if}
+        <div class="card-content">
+          <h3>{apt.title}</h3>
+          <p class="city">{apt.city}</p>
+          <p class="beds">Beds: {apt.beds}</p>
+        </div>
+      </div>
     {/each}
-  </ul>
+  </div>
 </section>
 
 <style>
@@ -69,14 +89,11 @@
     font-family: system-ui, sans-serif;
   }
 
-  /* ======================== */
-  /* 🔙 BACK BUTTON + HEADER  */
-  /* ======================== */
   header {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.1rem;
+    margin-bottom: 1.2rem;
   }
 
   .back {
@@ -90,7 +107,6 @@
     color: var(--accent-light);
     transition: 0.2s ease;
   }
-
   .back:hover {
     background: var(--accent-light);
     color: white;
@@ -102,15 +118,13 @@
     font-weight: 700;
   }
 
-  /* Filters */
   .filters {
     display: flex;
     gap: 0.8rem;
     margin-bottom: 1rem;
   }
 
-  input,
-  select {
+  input {
     padding: 0.6rem 0.7rem;
     border: 2px solid var(--border);
     border-radius: 8px;
@@ -118,49 +132,67 @@
     font-size: 0.95rem;
   }
 
-  ul {
-    list-style: none;
-    padding: 0;
+  .cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
   }
 
-  li {
+  .card {
     background: var(--card-bg);
-    padding: 1rem;
     border-radius: 12px;
     border: 2px solid var(--border);
-    margin-bottom: 1rem;
-    transition: 0.15s ease;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.2s ease, transform 0.2s ease;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   }
-
-  li:hover {
-    transform: translateY(-3px);
+  .card:hover {
+    transform: translateY(-4px);
     border-color: var(--accent-light);
   }
 
-  li h3 {
+  .card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .placeholder {
+    width: 100%;
+    height: 150px;
+    background: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .card-content {
+    padding: 0.8rem;
+  }
+
+  .card-content h3 {
     margin: 0 0 0.3rem;
     color: var(--accent-light);
+    font-size: 1.05rem;
   }
 
   .city {
     color: var(--text-muted);
     margin-bottom: 0.5rem;
+    font-size: 0.9rem;
   }
 
   .beds {
-    border: 2px solid var(--accent-light);
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
     background: var(--accent-bg);
-    padding: 0.35rem 0.6rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
+    border: 1.5px solid var(--accent-light);
     color: var(--accent-light);
-    transition: 0.2s;
-  }
-
-  .beds:hover {
-    background: var(--accent-light);
-    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
   }
 </style>
