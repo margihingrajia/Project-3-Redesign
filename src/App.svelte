@@ -1,5 +1,5 @@
 <script>
-  import Homepage from './components/Homepage.svelte';
+  import Homepage from './components/HomePage.svelte';
   import Filter from './components/Filter.svelte';
   import ApartmentHousing from './pages/ApartmentHousing.svelte';
 
