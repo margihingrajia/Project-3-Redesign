@@ -1,7 +1,7 @@
 <script>
+  import Homepage from './components/HomePage.svelte';
   import Navbar from "./components/Navbar.svelte";
 
-  import Homepage from './components/Homepage.svelte';
   import Filter from './components/Filter.svelte';
   import ApartmentHousing from './pages/ApartmentHousing.svelte';
   import ApartmentDetails from './pages/ApartmentDetails.svelte';
