@@ -166,8 +166,31 @@
 
     <!-- right column -->
     <aside class="right">
-      <button class="filter">English ▼</button>
-      <button class="filter">Nearby ▼</button>
+      <div class="language-wrapper">
+        <button class="filter" on:click={toggleLanguages}>English ▼</button>
+        {#if showLanguages}
+          <ul class="language-list">
+            {#each languages as lang}
+              <li>{lang}</li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
+
+      <div class="nearby-wrapper">
+        <button class="filter" on:click={toggleNearby}>
+          Nearby ▼
+        </button>
+
+        {#if showNearby}
+          <ul class="nearby-list">
+            {#each nearbyCities as city}
+              <li>{city.name} – {city.distance} mi</li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
+
       <button class="filter">US Cities ▼</button>
       <button class="filter">US States ▼</button>
       <button class="filter">Canada ▼</button>
@@ -409,4 +432,41 @@
     color: #4b5563;
     text-decoration: none;
   }
+  .language-wrapper {
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .language-list {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    font-size: 12px;
+  }
+
+  .language-list li + li {
+    margin-top: 2px;
+  }
+  .nearby-wrapper {
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .nearby-list {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    font-size: 12px;
+  }
+
+  .nearby-list li + li {
+    margin-top: 2px;
+  }
+
 </style>
