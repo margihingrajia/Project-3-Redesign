@@ -189,8 +189,8 @@
 :root {
   --card-bg: #ffffff;
   --border: #e4e4e4;
-  --accent: #4f46e5;
-  --accent-light: #6366f1;
+  --accent: #6a1b9a ;
+  --accent-light: #8c49b5 ;
   --text-muted: #666;
 }
 

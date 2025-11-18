@@ -1,6 +1,7 @@
 <script>
   import Homepage from './components/HomePage.svelte';
   import Navbar from "./components/Navbar.svelte";
+  import Footer from './components/Footer.svelte'; // ← added footer
 
   import ApartmentHousing from './pages/ApartmentHousing.svelte';
   import ApartmentDetails from './pages/ApartmentDetails.svelte';
@@ -83,6 +84,8 @@
     <Homepage />
   {/if}
 </main>
+
+<Footer /> <!-- ← added footer here -->
 
 <style>
   main {

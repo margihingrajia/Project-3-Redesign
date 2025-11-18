@@ -14,17 +14,22 @@
   let q = "";
   let minBeds = 0;
   let city = "";
+  let apartmentType = "";
+
+  // Dynamic filter options
+  $: cities = Array.from(new Set(apartments.map(a => a.city))).sort();
+  $: bedOptions = Array.from(new Set(apartments.map(a => a.beds))).sort((a,b)=>a-b);
+  $: typeOptions = Array.from(new Set(apartments.map(a => a.type))).sort();
 
   $: filtered = apartments.filter(a => {
     const matchesText = !activeFilters.q || `${a.title} ${a.city}`.toLowerCase().includes(activeFilters.q?.toLowerCase());
     const matchesBeds = !activeFilters.minBeds || a.beds >= activeFilters.minBeds;
     const matchesCity = !activeFilters.city || a.city === activeFilters.city;
-
+    const matchesType = !activeFilters.apartmentType || a.type === activeFilters.apartmentType;
     const matchesPrice = !activeFilters.priceMax || a.price <= activeFilters.priceMax;
     const matchesPets = !activeFilters.petsAllowed || a.petsAllowed === activeFilters.petsAllowed;
-    const matchesType = !activeFilters.apartmentType || a.type === activeFilters.apartmentType;
 
-    return matchesText && matchesBeds && matchesCity && matchesPrice && matchesPets && matchesType;
+    return matchesText && matchesBeds && matchesCity && matchesType && matchesPrice && matchesPets;
   });
 
   function openDetails(id) {
@@ -46,7 +51,7 @@
 
   onMount(() => {
     apartments.forEach(async (apt) => {
-      const path = `/apartment${apt.id}/img1.webp`;
+      const path = `/apartments/apartment${apt.id}/img1.webp`;
       try {
         const res = await fetch(path, { method: "HEAD" });
         if (res.ok) firstImages[apt.id] = path;
@@ -59,7 +64,8 @@
       q = filters.q || "";
       minBeds = filters.minBeds || 0;
       city = filters.city || "";
-      activeFilters = { q, minBeds, city };
+      apartmentType = filters.apartmentType || "";
+      activeFilters = { q, minBeds, city, apartmentType };
     }
   });
 </script>
@@ -71,7 +77,6 @@
       <button class="back" on:click={goBack}>← Back</button>
       <h2>Apartment / Housing</h2>
       <button class="filter-btn" on:click={toggleFilters}>Filter</button>
-      <!-- <button class="adv-filter-btn">Advanced</button> -->
     </div>
   </header>
 
@@ -79,11 +84,26 @@
   {#if showFilters}
     <div class="filters">
       <input placeholder="Search…" bind:value={q} on:input={() => onFilterChange({ detail: { ...activeFilters, q } })} />
-      <input type="number" placeholder="Min Beds" min="0" bind:value={minBeds} on:input={() => onFilterChange({ detail: { ...activeFilters, minBeds } })} />
+
+      <select bind:value={minBeds} on:change={() => onFilterChange({ detail: { ...activeFilters, minBeds } })}>
+        <option value={0}>Min Beds</option>
+        {#each bedOptions as b}
+          <option value={b}>{b} Beds</option>
+        {/each}
+      </select>
+
       <select bind:value={city} on:change={() => onFilterChange({ detail: { ...activeFilters, city } })}>
         <option value="">All Cities</option>
-        <option value="CityA">CityA</option>
-        <option value="CityB">CityB</option>
+        {#each cities as c}
+          <option value={c}>{c}</option>
+        {/each}
+      </select>
+
+      <select bind:value={apartmentType} on:change={() => onFilterChange({ detail: { ...activeFilters, apartmentType } })}>
+        <option value="">All Types</option>
+        {#each typeOptions as t}
+          <option value={t}>{t}</option>
+        {/each}
       </select>
     </div>
   {/if}
@@ -117,8 +137,8 @@
 
 <style>
 :root {
-  --accent: #4f46e5;
-  --accent-light: #6366f1;
+  --accent: #6a1b9a ;
+  --accent-light: #6a1b9a;
   --accent-bg: #eef0ff;
   --text-main: #1a1a1a;
   --text-muted: #555;
@@ -196,21 +216,111 @@ h2 {
   border-radius: 8px;
   font-size: 0.95rem;
 }
-
-  ul {
-    list-style: none;
-    padding: 0;
+  .back {
+    background: var(--accent-bg);
+    border: 2px solid var(--accent-light);
+    padding: 0.4rem 0.7rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--accent-light);
+    transition: 0.2s ease;
   }
+
+  .back:hover {
+    background: var(--accent-light);
+    color: white;
+  }
+
+  header h2 {
+    color: var(--accent);
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+
+  /* Filters */
+  .filters {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  input {
+    padding: 0.6rem 0.7rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    flex: 1;
+    font-size: 0.95rem;
+  }
+
+.advanced-filters-wrapper {
+  margin-bottom: 1rem;
+}
+
+/* CARDS */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 1200px) { .cards-container { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) { .cards-container { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .cards-container { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease;
+}
+.card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+
+.image-wrapper { position: relative; }
+.image-wrapper img { width: 100%; height: 150px; object-fit: cover; transition: transform 0.3s ease; }
+.card:hover .image-wrapper img { transform: scale(1.05); }
+
+.price-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #2ecc71; /* GREEN */
+  color: white;
+  padding: 0.3rem 0.6rem;
+  font-weight: 700;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+
+.placeholder { height: 150px; background: #eee; display: flex; justify-content: center; align-items: center; color: var(--text-muted); }
+
+.card-content { padding: 0.8rem; }
+.card-content h3 { margin: 0 0 0.3rem; color: var(--accent-light); font-size: 1.05rem; }
+.city { color: var(--text-muted); margin-bottom: 0.5rem; }
+.beds {
+  display: inline-block; padding: 0.3rem 0.6rem;
+  background: var(--accent-bg); border: 1.5px solid var(--accent-light);
+  border-radius: 6px; font-size: 0.85rem; color: var(--accent-light); font-weight: 600;
+}
+  ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* ⭐ 4 columns */
+  gap: 1rem; /* spacing between cards */
+}
 
   li {
-    background: var(--card-bg);
-    padding: 1rem;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    margin-bottom: 1rem;
-    transition: 0.15s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  }
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  transition: 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
 
   li:hover {
     transform: translateY(-3px);
