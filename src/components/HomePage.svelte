@@ -166,31 +166,8 @@
 
     <!-- right column -->
     <aside class="right">
-      <div class="language-wrapper">
-        <button class="filter" on:click={toggleLanguages}>English ▼</button>
-        {#if showLanguages}
-          <ul class="language-list">
-            {#each languages as lang}
-              <li>{lang}</li>
-            {/each}
-          </ul>
-        {/if}
-      </div>
-
-      <div class="nearby-wrapper">
-        <button class="filter" on:click={toggleNearby}>
-          Nearby ▼
-        </button>
-
-        {#if showNearby}
-          <ul class="nearby-list">
-            {#each nearbyCities as city}
-              <li>{city.name} – {city.distance} mi</li>
-            {/each}
-          </ul>
-        {/if}
-      </div>
-
+      <button class+"filter">English ▼</button>
+      <button class="filter">Nearby ▼</button>
       <button class="filter">US Cities ▼</button>
       <button class="filter">US States ▼</button>
       <button class="filter">Canada ▼</button>
