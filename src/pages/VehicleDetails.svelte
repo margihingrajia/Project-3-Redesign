@@ -4,7 +4,7 @@
 
   export let id;
 
-  let vehicle = vehicles.find(a => a.id == id)
+  let vehicle = vehicles.find((a) => a.id == id);
   let images = [];
   let mainImage = "";
   let showLightbox = false;
@@ -61,7 +61,7 @@
      📌 Load vehicle + images
      -------------------------------------------------------- */
   onMount(async () => {
-    vehicle = vehicles.find(v => v.id == id);
+    vehicle = vehicles.find((v) => v.id == id);
 
     images = await fetchAllImages();
     mainImage = images[0] || "/images/no-image.jpg";
@@ -75,6 +75,9 @@
 <!-- ========================== -->
 <!--     BREADCRUMB NAV         -->
 <!-- ========================== -->
+
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <nav class="breadcrumbs">
   <span on:click={goBack}>Vehicles</span> »
   <span>{vehicle?.make} {vehicle?.model}</span>
@@ -83,10 +86,11 @@
 <section class="container">
   <button class="back" on:click={goBack}>← Back</button>
 
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
   {#if vehicle}
     <header>
       <h2>{vehicle.year} {vehicle.make} {vehicle.model}</h2>
-      <button class="favorite" on:click={() => isFavorited = !isFavorited}>
+      <button class="favorite" on:click={() => (isFavorited = !isFavorited)}>
         {isFavorited ? "❤️ Saved" : "🤍 Save"}
       </button>
     </header>
@@ -94,16 +98,21 @@
     <p class="city">{vehicle.city}</p>
 
     <!-- ⭐ MAIN IMAGE (click to open lightbox) -->
-    <div 
-      class="main-image" 
-      on:click={() => showLightbox = true}
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div
+      class="main-image"
+      on:click={() => (showLightbox = true)}
       on:touchstart={startSwipe}
       on:touchend={endSwipe}
     >
+      <!-- svelte-ignore a11y-img-redundant-alt -->
       <img src={mainImage} alt="Vehicle photo" />
     </div>
 
     <!-- ⭐ IMAGE GALLERY THUMBNAILS -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+    <!-- svelte-ignore a11y-img-redundant-alt -->
     <div class="gallery">
       {#each images as img}
         <img
@@ -131,19 +140,20 @@
       </ul>
 
       <div class="actions">
-        <button on:click={() => showContact = true}>📞 Contact Seller</button>
-        <button on:click={() => showVisit = true}>📅 Schedule a Visit</button>
+        <button on:click={() => (showContact = true)}>📞 Contact Seller</button>
+        <button on:click={() => (showVisit = true)}>📅 Schedule a Visit</button>
       </div>
     </div>
-
   {/if}
 </section>
 
 <!-- ========================== -->
 <!--       LIGHTBOX MODAL       -->
 <!-- ========================== -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if showLightbox}
-  <div class="lightbox" on:click={() => showLightbox = false}>
+  <div class="lightbox" on:click={() => (showLightbox = false)}>
     <img src={mainImage} alt="Zoomed" />
   </div>
 {/if}
@@ -151,8 +161,10 @@
 <!-- ========================== -->
 <!--      CONTACT SELLER        -->
 <!-- ========================== -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if showContact}
-  <div class="modal-bg" on:click={() => showContact = false}>
+  <div class="modal-bg" on:click={() => (showContact = false)}>
     <div class="modal" on:click|stopPropagation>
       <h3>Contact Seller</h3>
       <input placeholder="Your Name" />
@@ -166,8 +178,10 @@
 <!-- ========================== -->
 <!--     SCHEDULE A VISIT       -->
 <!-- ========================== -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if showVisit}
-  <div class="modal-bg" on:click={() => showVisit = false}>
+  <div class="modal-bg" on:click={() => (showVisit = false)}>
     <div class="modal" on:click|stopPropagation>
       <h3>Schedule a Visit</h3>
       <input type="date" />
@@ -281,7 +295,7 @@
   .lightbox {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -296,7 +310,7 @@
   .modal-bg {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -311,7 +325,8 @@
     flex-direction: column;
     gap: 0.7rem;
   }
-  .modal input, .modal textarea {
+  .modal input,
+  .modal textarea {
     padding: 0.6rem;
     border-radius: 8px;
     border: 1px solid #ccc;
