@@ -409,41 +409,5 @@
     color: #4b5563;
     text-decoration: none;
   }
-  .language-wrapper {
-    position: relative;
-    margin-bottom: 6px;
-  }
-
-  .language-list {
-    list-style: none;
-    margin: 4px 0 0;
-    padding: 6px 8px;
-    border-radius: 4px;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    font-size: 12px;
-  }
-
-  .language-list li + li {
-    margin-top: 2px;
-  }
-  .nearby-wrapper {
-    position: relative;
-    margin-bottom: 6px;
-  }
-
-  .nearby-list {
-    list-style: none;
-    margin: 4px 0 0;
-    padding: 6px 8px;
-    border-radius: 4px;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    font-size: 12px;
-  }
-
-  .nearby-list li + li {
-    margin-top: 2px;
-  }
-
+  
 </style>
