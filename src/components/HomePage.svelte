@@ -166,7 +166,7 @@
 
     <!-- right column -->
     <aside class="right">
-      <button class+"filter">English ▼</button>
+      <button class="filter">English ▼</button>
       <button class="filter">Nearby ▼</button>
       <button class="filter">US Cities ▼</button>
       <button class="filter">US States ▼</button>

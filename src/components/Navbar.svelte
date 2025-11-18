@@ -53,15 +53,18 @@
 </script>
 
 <!-- NAVBAR -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <nav class="navbar">
   <!-- LEFT SECTION -->
   <div class="left">
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="logo" on:click={() => (location.hash = "")}>
       Craigslist
     </div>
 
     <ul class="tabs">
       {#each tabs as tab}
+        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <li
           class:selected={isActive(tab.hash)}
           on:click={() => go(tab.hash)}
@@ -80,6 +83,8 @@
 </nav>
 
 <!-- LOGIN MODAL -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if showLogin}
   <div class="modal-backdrop" on:click={closeLogin}></div>
 

@@ -20,7 +20,7 @@
   </header>
 
   <div class="controls">
-    <input placeholder="Search title or city" bind:value={q} />
+    <input type="text" placeholder="Search title or city" bind:value={q} />
     <input type="number" min="0" placeholder="Min price" bind:value={minPrice} />
   </div>
 
