@@ -99,21 +99,6 @@
         <li>Discussion Forums</li>
       </ul>
 
-      <!-- simple calendar -->
-      <aside class="left">
-  <!-- main category links -->
-  <ul class="left-links">
-    <li>Community</li>
-    <li>Housing</li>
-    <li>Jobs</li>
-    <li>Services</li>
-    <li>For Sale</li>
-    <li>Gigs</li>
-    <li>Resumes</li>
-    <li>Discussion Forums</li>
-  </ul>
-
-  <!-- NEW craigslist info links -->
   <!-- svelte-ignore a11y-invalid-attribute -->
   <div class="info-links">
 
