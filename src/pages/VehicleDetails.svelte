@@ -138,11 +138,6 @@
           <li>✔ {f}</li>
         {/each}
       </ul>
-
-      <div class="actions">
-        <button on:click={() => (showContact = true)}>📞 Contact Seller</button>
-        <button on:click={() => (showVisit = true)}>📅 Schedule a Visit</button>
-      </div>
     </div>
   {/if}
 </section>
@@ -155,39 +150,6 @@
 {#if showLightbox}
   <div class="lightbox" on:click={() => (showLightbox = false)}>
     <img src={mainImage} alt="Zoomed" />
-  </div>
-{/if}
-
-<!-- ========================== -->
-<!--      CONTACT SELLER        -->
-<!-- ========================== -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-{#if showContact}
-  <div class="modal-bg" on:click={() => (showContact = false)}>
-    <div class="modal" on:click|stopPropagation>
-      <h3>Contact Seller</h3>
-      <input placeholder="Your Name" />
-      <input placeholder="Your Email" />
-      <textarea placeholder="Message"></textarea>
-      <button>Send Message</button>
-    </div>
-  </div>
-{/if}
-
-<!-- ========================== -->
-<!--     SCHEDULE A VISIT       -->
-<!-- ========================== -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-{#if showVisit}
-  <div class="modal-bg" on:click={() => (showVisit = false)}>
-    <div class="modal" on:click|stopPropagation>
-      <h3>Schedule a Visit</h3>
-      <input type="date" />
-      <input type="time" />
-      <button>Confirm</button>
-    </div>
   </div>
 {/if}
 
@@ -276,21 +238,6 @@
     padding-left: 1rem;
   }
 
-  .actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
-
-  .actions button {
-    padding: 0.6rem 1rem;
-    border: none;
-    background: #4f46e5;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-
   /* Lightbox */
   .lightbox {
     position: fixed;
@@ -306,37 +253,4 @@
     border-radius: 10px;
   }
 
-  /* Modal UI */
-  .modal-bg {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .modal {
-    background: white;
-    padding: 1rem;
-    border-radius: 12px;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
-  }
-  .modal input,
-  .modal textarea {
-    padding: 0.6rem;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    width: 100%;
-  }
-  .modal button {
-    padding: 0.6rem;
-    background: #4f46e5;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-  }
 </style>

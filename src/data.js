@@ -335,6 +335,7 @@ export const vehicles = [
     city: "Austin, TX",
     features: ["Bluetooth", "Backup Camera", "Cruise Control"],
     description: "Well-maintained sedan; single owner, recent service history.",
+    image: "/images/vehicles/vehicle1.svg",
   },
   {
     id: 2,
@@ -346,6 +347,7 @@ export const vehicles = [
     city: "Seattle, WA",
     features: ["Fuel Efficient", "Lane Assist"],
     description: "Reliable commuter car with excellent fuel economy.",
+    image: "/images/vehicles/vehicle2.svg",
   },
   {
     id: 3,
@@ -357,6 +359,7 @@ export const vehicles = [
     city: "Raleigh, NC",
     features: ["4x4", "Tow Package"],
     description: "Work-ready pickup with bed liner and tow hitch.",
+    image: "/images/vehicles/vehicle3.svg",
   },
   {
     id: 4,
@@ -368,6 +371,7 @@ export const vehicles = [
     city: "San Francisco, CA",
     features: ["Autopilot", "Electric"],
     description: "Mid-range Model 3 with good battery health and features.",
+    image: "/images/vehicles/vehicle4.svg",
   },
   {
     id: 5,
@@ -379,6 +383,7 @@ export const vehicles = [
     city: "Detroit, MI",
     features: ["Bluetooth", "Cruise Control"],
     description: "Comfortable midsize sedan, clean interior.",
+    image: "/images/vehicles/vehicle5.svg",
   },
   {
     id: 6,
@@ -390,6 +395,7 @@ export const vehicles = [
     city: "New York, NY",
     features: ["All Wheel Drive", "Sunroof"],
     description: "Luxury compact SUV with premium interior and recent maintenance.",
+    image: "/images/vehicles/vehicle6.svg",
   },
   {
     id: 7,
@@ -401,6 +407,7 @@ export const vehicles = [
     city: "San Diego, CA",
     features: ["Electric", "Low Running Cost"],
     description: "Affordable electric hatchback with good range for city driving.",
+    image: "/images/vehicles/vehicle7.svg",
   },
   {
     id: 8,
@@ -412,6 +419,7 @@ export const vehicles = [
     city: "Houston, TX",
     features: ["4x4", "Removable Top"],
     description: "Rugged off-road ready Jeep with aftermarket tires.",
+    image: "/images/vehicles/vehicle8.svg",
   },
   {
     id: 9,
@@ -423,6 +431,7 @@ export const vehicles = [
     city: "Denver, CO",
     features: ["All Wheel Drive", "Roof Rails"],
     description: "Versatile wagon with good cargo room and safety features.",
+    image: "/images/vehicles/vehicle9.svg",
   },
   {
     id: 10,
@@ -434,6 +443,7 @@ export const vehicles = [
     city: "Phoenix, AZ",
     features: ["Fuel Efficient", "Apple CarPlay"],
     description: "Late-model compact with warranty remaining.",
+    image: "/images/vehicles/vehicle10.svg",
   }
 ];
 
