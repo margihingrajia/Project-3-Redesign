@@ -15,7 +15,7 @@
     let index = 1;
 
     while (true) {
-      const path = `/apartment${id}/img${index}.webp`;
+      const path = `/apartments/apartment${id}/img${index}.webp`;
 
       try {
         const res = await fetch(path, { method: "HEAD" });

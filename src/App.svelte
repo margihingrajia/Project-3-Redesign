@@ -1,7 +1,7 @@
 <script>
+  import Homepage from './components/HomePage.svelte';
   import Navbar from "./components/Navbar.svelte";
 
-  import Homepage from './components/Homepage.svelte';
   import Filter from './components/Filter.svelte';
   import ApartmentHousing from './pages/ApartmentHousing.svelte';
   import ApartmentDetails from './pages/ApartmentDetails.svelte';
@@ -32,7 +32,7 @@
 
   // Filters for Housing
   let apartmentFilters = null;
-  const cities = ['CityA', 'CityB'];
+  const cities = ['CityA', 'CityB','CityC','CityD','CityE','CityF','CityG','CityH','CityI','CityJ','CityK','CityL','CityM','CityN','CityO','CityP'];
 
   function onFilterChange(event) {
     apartmentFilters = event.detail;

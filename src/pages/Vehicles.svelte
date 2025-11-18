@@ -10,7 +10,7 @@
 
 	function goTo(id) {
 		// navigate using the app's hash-based routing convention
-		location.hash = `/vehicle/${id}`;
+		location.hash = `/vehicles/details/${id}`;
 	}
 </script>
 
