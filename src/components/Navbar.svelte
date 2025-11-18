@@ -53,18 +53,16 @@
 </script>
 
 <!-- NAVBAR -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
 <nav class="navbar">
   <!-- LEFT SECTION -->
   <div class="left">
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="logo" on:click={() => (location.hash = "")}>
+      <img src="/favicon.ico" alt="Logo" class="logo-img" />
       Craigslist
     </div>
 
     <ul class="tabs">
       {#each tabs as tab}
-        <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
         <li
           class:selected={isActive(tab.hash)}
           on:click={() => go(tab.hash)}
@@ -83,8 +81,6 @@
 </nav>
 
 <!-- LOGIN MODAL -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 {#if showLogin}
   <div class="modal-backdrop" on:click={closeLogin}></div>
 
@@ -121,10 +117,19 @@
   }
 
   .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1.4rem;
     font-weight: 700;
     cursor: pointer;
-    color: #4f46e5;
+    color: #a020f0;
+  }
+
+  .logo-img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
   }
 
   .tabs {
@@ -148,7 +153,7 @@
   }
 
   .tabs li.selected {
-    background: #4f46e5;
+    background: #a020f0;
     color: white;
     font-weight: 600;
   }
@@ -175,7 +180,7 @@
     padding: 0.42rem 0.9rem;
     border-radius: 6px;
     cursor: pointer;
-    background: #4f46e5;
+    background: #a020f0;
     color: white;
     border: none;
     font-size: 0.9rem;
@@ -213,7 +218,7 @@
   }
 
   .submit-btn {
-    background: #4f46e5;
+    background: #a020f0;
     border: none;
     padding: 0.6rem;
     color: white;

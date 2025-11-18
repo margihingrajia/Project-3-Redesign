@@ -7,16 +7,12 @@
   let apt = apartments.find(a => a.id == id);
   let images = [];
 
-  /* ---------------------------
-     AUTO-LOAD ALL IMAGES
-  --------------------------- */
   onMount(async () => {
     const loaded = [];
     let index = 1;
 
     while (true) {
       const path = `/apartments/apartment${id}/img${index}.webp`;
-
       try {
         const res = await fetch(path, { method: "HEAD" });
         if (!res.ok) break;
@@ -34,9 +30,6 @@
     history.back();
   }
 
-  /* ---------------------------
-     LIGHTBOX
-  --------------------------- */
   let showLightbox = false;
   let currentIndex = 0;
 
@@ -52,213 +45,325 @@
   function prevImg() {
     currentIndex = (currentIndex - 1 + images.length) % images.length;
   }
+
+  /* --------------------------
+      TABS
+  --------------------------- */
+  let activeTab = "description";
+
+  const tabs = ["description", "details", "shipping", "seller"];
 </script>
 
-<!-- ---------------------------------------------
-     BREADCRUMB NAVIGATION
----------------------------------------------- -->
-<nav class="breadcrumb">
-  <a href="#/">Home</a> /
-  <a href="#/apartment-housing">Apartments</a> /
-  <span>{apt.title}</span>
-</nav>
+<!-- ======================================================
+     FULL PAGE WRAPPER → One Big Card, Full Width
+====================================================== -->
+<div class="page">
 
-<section>
-  <button class="back" on:click={goBack}>← Back</button>
+  <div class="card">
 
-  <h2>{apt.title}</h2>
-  <h4>{apt.city} — {apt.beds} Beds</h4>
-  <h3 class="price">${apt.price}/month</h3>
+    <!-- BREADCRUMB -->
+    <nav class="breadcrumb">
+      <a href="#/">Home</a> /
+      <a href="#/apartment-housing">Apartments</a> /
+      <span>{apt.title}</span>
+    </nav>
 
-  <!-- ---------------------------------------------
-       IMAGE GALLERY (click to expand)
-  ---------------------------------------------- -->
-  <div class="gallery">
-    {#each images as img, i}
-      <img src={img} alt="Apartment Photo" on:click={() => openLightbox(i)} />
-    {/each}
-  </div>
+    <!-- HEADER -->
+    <div class="header-row">
+      <button class="back" on:click={goBack}>← Back</button>
 
-  <!-- ---------------------------------------------
-       LIGHTBOX
-  ---------------------------------------------- -->
-  {#if showLightbox}
-    <div class="lightbox" on:click={() => (showLightbox = false)}>
-      <button class="prev" on:click|stopPropagation={prevImg}>❮</button>
-      <img src={images[currentIndex]} />
-      <button class="next" on:click|stopPropagation={nextImg}>❯</button>
+      <div class="title-block">
+        <h2>{apt.title}</h2>
+        <h4>{apt.city} — {apt.beds} Beds</h4>
+      </div>
+
+      <div class="price-block">
+        <h3>${apt.price}/month</h3>
+      </div>
     </div>
-  {/if}
 
-  <!-- ---------------------------------------------
-       DESCRIPTION / AMENITIES
-  ---------------------------------------------- -->
-  <div class="info">
-    <h3>Description</h3>
-    <p>{apt.description}</p>
+    <!-- ======================================================
+         IMAGE CAROUSEL (Full width inside card)
+    ======================================================= -->
+    <div class="carousel">
+      <button class="nav prev" on:click={prevImg}>❮</button>
 
-    <h3>Amenities</h3>
-    <ul>
-      {#each apt.features as feature}
-        <li>✔ {feature}</li>
+      <img
+        class="main-image"
+        src={images[currentIndex]}
+        alt="Main Photo"
+        on:click={() => openLightbox(currentIndex)}
+      />
+
+      <button class="nav next" on:click={nextImg}>❯</button>
+    </div>
+
+    <!-- THUMBNAILS -->
+    <div class="thumbnails">
+      {#each images as img, i}
+        <img
+          src={img}
+          alt="Thumbnail"
+          class:selected={i === currentIndex}
+          on:click={() => (currentIndex = i)}
+        />
       {/each}
-    </ul>
-  </div>
+    </div>
 
-  <!-- ---------------------------------------------
-       CONTACT LANDLORD UI
-  ---------------------------------------------- -->
-  <div class="contact">
-    <h3>Contact Landlord</h3>
-    <input placeholder="Your name" />
-    <input placeholder="Your email" />
-    <textarea placeholder="Message"></textarea>
-    <button>Send Inquiry</button>
-  </div>
+    <!-- ======================================================
+         TABS
+    ======================================================= -->
+    <div class="tabs">
+      {#each tabs as t}
+        <button
+          class:selected={activeTab === t}
+          on:click={() => (activeTab = t)}
+        >
+          {t.charAt(0).toUpperCase() + t.slice(1)}
+        </button>
+      {/each}
+    </div>
 
-  <!-- ---------------------------------------------
-       MAP PREVIEW (STATIC PREVIEW OR IFRAME)
-  ---------------------------------------------- -->
-  <div class="map">
-    <h3>Location</h3>
-    <iframe
-      title = "Images"
-      width="100%"
-      height="250"
-      style="border:0; border-radius: 12px;"
-      loading="lazy"
-      allowfullscreen
-      src="https://maps.google.com/maps?q={encodeURIComponent(apt.city)}&z=13&output=embed">
-    </iframe>
+    <!-- ======================================================
+         TAB CONTENT
+    ======================================================= -->
+
+    {#if activeTab === "description"}
+      <div class="tab-content">
+        <h3>Description</h3>
+        <p>{apt.description}</p>
+      </div>
+    {/if}
+
+    {#if activeTab === "details"}
+      <div class="tab-content">
+        <h3>Details</h3>
+        <ul>
+          {#each apt.features as feature}
+            <li>✔ {feature}</li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+
+    {#if activeTab === "shipping"}
+      <div class="tab-content">
+        <h3>Shipping / Move-in</h3>
+        <p>Move-in date: Flexible</p>
+        <p>Lease options: 12-month or 6-month</p>
+        <p>Utilities: Water + trash included</p>
+      </div>
+    {/if}
+
+    {#if activeTab === "seller"}
+      <div class="tab-content">
+        <h3>Seller / Landlord Info</h3>
+        <p><strong>Landlord:</strong> {apt.seller}</p>
+        <p><strong>Phone:</strong> {apt.phone}</p>
+
+        <input placeholder="Your name" />
+        <input placeholder="Your email" />
+        <textarea placeholder="Message"></textarea>
+        <button class="send">Send Inquiry</button>
+      </div>
+    {/if}
+
+    <!-- MAP -->
+    <div class="map">
+      <h3>Location</h3>
+      <iframe
+        width="100%"
+        height="260"
+        style="border:0; border-radius: 12px;"
+        loading="lazy"
+        allowfullscreen
+        src="https://maps.google.com/maps?q={encodeURIComponent(apt.city)}&z=13&output=embed">
+      </iframe>
+    </div>
+
   </div>
-</section>
+</div>
 
 <style>
-/* Breadcrumb */
+
+:root {
+  --card-bg: #ffffff;
+  --border: #e4e4e4;
+  --accent: #6a1b9a ;
+  --accent-light: #8c49b5 ;
+  --text-muted: #666;
+}
+
+/* ======================================================
+   PAGE WRAPPER → CENTER CONTENT + SIDE MARGINS
+====================================================== */
+.page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;       /* top/bottom spacing */
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  max-width: 1200px;     /* nicely centered layout */
+  background: var(--card-bg);
+  padding: 0 1rem 3rem;  /* side margins + bottom spacing */
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+/* ======================================================
+   BREADCRUMB
+====================================================== */
 .breadcrumb {
   font-size: 0.9rem;
-  margin-bottom: 1rem;
+  padding: 1rem 0;
 }
 .breadcrumb a {
   color: var(--accent-light);
   text-decoration: none;
 }
 
-/* Back Button */
-.back {
-  background: var(--accent-bg);
-  border: 2px solid var(--accent-light);
-  padding: 0.5rem 0.8rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  color: var(--accent-light);
-  margin-bottom: 1rem;
-}
-.back:hover {
-  background: var(--accent-light);
-  color: white;
+/* ======================================================
+   HEADER
+====================================================== */
+.header-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding-bottom: 1rem;
+  gap: 1rem;
 }
 
-/* Titles */
-h2 {
+.title-block h2 {
+  margin: 0;
   font-size: 1.8rem;
   color: var(--accent);
-  margin-bottom: 0.4rem;
 }
-h4 {
-  margin-top: 0;
+.title-block h4 {
+  margin-top: 4px;
   color: var(--text-muted);
 }
-.price {
-  margin-top: 0.3rem;
+
+.price-block h3 {
+  font-size: 1.4rem;
   color: #16a34a;
-  font-size: 1.3rem;
-  font-weight: 700;
 }
 
-/* Image Gallery */
-.gallery {
-  margin-top: 1rem;
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-}
-.gallery img {
-  width: 100%;
-  border-radius: 14px;
-  border: 2px solid var(--accent-light);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+/* Back button */
+.back {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: transform .15s ease;
-}
-.gallery img:hover {
-  transform: scale(1.03);
+  color: var(--accent);
 }
 
-/* Lightbox */
-.lightbox {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  backdrop-filter: blur(4px);
-  background: rgba(0,0,0,0.65);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 500;
+/* ======================================================
+   CAROUSEL
+====================================================== */
+.carousel {
+  position: relative;
+  width: 100%;
+  margin-top: 1rem;
 }
-.lightbox img {
-  max-width: 90%;
-  max-height: 80%;
-  border-radius: 12px;
+
+.main-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 10px;
 }
-.lightbox button {
+
+/* Arrows */
+.carousel .nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   background: white;
   border: none;
-  padding: 0.5rem 0.8rem;
   font-size: 2rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 50%;
   cursor: pointer;
-  border-radius: 10px;
 }
-.prev { left: 2rem; }
-.next { right: 2rem; }
+.carousel .prev { left: 1rem; }
+.carousel .next { right: 1rem; }
 
-/* Info */
-.info {
-  margin-top: 2rem;
+/* ======================================================
+   THUMBNAILS
+====================================================== */
+.thumbnails {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.6rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
 }
 
-/* Contact Box */
-.contact {
-  margin-top: 2rem;
-  background: #f8f8ff;
-  padding: 1rem;
+.thumbnails img {
+  width: 110px;
+  height: 80px;
+  object-fit: cover;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  border: 2px solid transparent;
+  cursor: pointer;
 }
-.contact input,
-.contact textarea {
-  width: 100%;
-  padding: 0.6rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin: 0.4rem 0;
+.thumbnails img.selected {
+  border-color: var(--accent-light);
 }
-.contact button {
-  padding: 0.6rem 1rem;
+
+/* ======================================================
+   TABS
+====================================================== */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-top: 1.5rem;
+  gap: 0.3rem;
+}
+
+.tabs button {
+  flex: 1;
+  padding: 0.9rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  border-bottom: 3px solid transparent;
+}
+.tabs button.selected {
+  color: var(--accent);
+  border-color: var(--accent-light);
+  font-weight: 600;
+}
+
+/* ======================================================
+   TAB CONTENT
+====================================================== */
+.tab-content {
+  padding: 1rem 0;
+}
+
+.send {
   background: var(--accent-light);
   color: white;
   border: none;
   border-radius: 8px;
+  padding: 0.7rem 1rem;
   cursor: pointer;
 }
 
-/* Map */
+/* ======================================================
+   MAP
+====================================================== */
 .map {
   margin-top: 2rem;
 }
+
 </style>
+

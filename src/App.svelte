@@ -1,8 +1,8 @@
 <script>
   import Homepage from './components/HomePage.svelte';
   import Navbar from "./components/Navbar.svelte";
+  import Footer from './components/Footer.svelte'; // ← added footer
 
-  import Filter from './components/Filter.svelte';
   import ApartmentHousing from './pages/ApartmentHousing.svelte';
   import ApartmentDetails from './pages/ApartmentDetails.svelte';
 
@@ -21,16 +21,13 @@
   import More from './pages/More.svelte';
   import MoreDetails from './pages/MoreDetails.svelte';
 
-  // Current route
+  // ROUTER STATE
   let route = window.location.hash || '';
-
-  const onHashChange = () => {
+  window.addEventListener('hashchange', () => {
     route = window.location.hash || '';
-  };
+  });
 
-  window.addEventListener('hashchange', onHashChange);
-
-  // Filters for Housing
+  // FILTERS FOR HOUSING
   let apartmentFilters = null;
   const cities = ['CityA', 'CityB','CityC','CityD','CityE','CityF','CityG','CityH','CityI','CityJ','CityK','CityL','CityM','CityN','CityO','CityP'];
 
@@ -44,7 +41,6 @@
   }
 </script>
 
-<!-- Navbar always on top -->
 <Navbar {route} />
 
 <main>
@@ -52,14 +48,7 @@
     <ApartmentDetails id={getId('apartment-housing')} />
 
   {:else if route === '#/apartment-housing'}
-    <div class="layout">
-      <div class="side">
-        <Filter on:change={onFilterChange} cities={cities} initial={apartmentFilters}/>
-      </div>
-      <section class="content">
-        <ApartmentHousing filters={apartmentFilters}/>
-      </section>
-    </div>
+    <ApartmentHousing filters={apartmentFilters} on:change={onFilterChange} />
 
   {:else if route.startsWith('#/vehicles/details/')}
     <VehicleDetails id={getId('vehicles')} />
@@ -96,28 +85,14 @@
   {/if}
 </main>
 
+<Footer /> <!-- ← added footer here -->
+
 <style>
   main {
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-    padding: 2rem;
-    max-width: 900px;
+    padding: 2rem 1rem;
+    max-width: 1200px;
     margin: 0 auto;
     color: #222;
-  }
-
-  .layout {
-    display: flex;
-    gap: 1.4rem;
-    align-items: flex-start;
-  }
-
-  .side {
-    width: 75px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .content {
-    flex: 1;
   }
 </style>
