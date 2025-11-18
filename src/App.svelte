@@ -32,7 +32,7 @@
 
   // Filters for Housing
   let apartmentFilters = null;
-  const cities = ['CityA', 'CityB'];
+  const cities = ['CityA', 'CityB','CityC','CityD','CityE','CityF','CityG','CityH','CityI','CityJ','CityK','CityL','CityM','CityN','CityO','CityP'];
 
   function onFilterChange(event) {
     apartmentFilters = event.detail;
