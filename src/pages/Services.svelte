@@ -34,11 +34,19 @@
     {:else}
       {#each filtered as svc}
         <li class="card">
-          <h3>{svc.title}</h3>
-          <p><strong>Category:</strong> {svc.category} — <strong>City:</strong> {svc.city}</p>
-          <p><strong>Price:</strong> {formatPrice(svc)} — <strong>Rating:</strong> {svc.rating ?? '—'}</p>
-          <p class="muted">{svc.description}</p>
-          <p class="contact">Contact: {svc.contact}</p>
+          <div class="thumb" aria-hidden></div>
+          <div class="content">
+            <div class="row">
+              <h3>{svc.title}</h3>
+              <div class="badge">{formatPrice(svc)}</div>
+            </div>
+            <div class="meta"><span class="category">{svc.category}</span> — <span class="city">{svc.city}</span></div>
+            <p class="muted">{svc.description}</p>
+            <div class="row footer">
+              <div class="rating">⭐ {svc.rating ?? '—'}</div>
+              <div class="contact">{svc.contact}</div>
+            </div>
+          </div>
         </li>
       {/each}
     {/if}
@@ -46,10 +54,19 @@
 </section>
 
 <style>
+  :root { --accent:#007acc; --card-bg:#fff; --muted:#555; }
   .filters { margin:1rem 0; }
-  input { padding:0.4rem; border:1px solid #ccc; border-radius:4px; width:100%; }
+  input { padding:0.6rem 0.8rem; border:1px solid #e3e7ea; border-radius:8px; width:100%; box-shadow:inset 0 1px 0 rgba(0,0,0,0.02); }
   ul { list-style:none; padding:0; }
-  .card { padding:0.8rem; border:1px solid #eee; border-radius:6px; margin-bottom:0.6rem; }
-  .muted { color:#555; margin:0.4rem 0; }
-  .contact { font-size:0.9rem; color:#333; }
+  .card { display:flex; gap:0.9rem; padding:0.75rem; background:var(--card-bg); border-radius:10px; box-shadow:0 6px 18px rgba(20,24,28,0.04); border:1px solid rgba(20,24,28,0.04); margin-bottom:0.75rem; align-items:flex-start; }
+  .thumb { width:72px; height:72px; background:linear-gradient(135deg,#f3f5f7,#eef2f6); border-radius:8px; flex:0 0 72px; }
+  .content { flex:1; }
+  .row { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; }
+  h3 { margin:0; font-size:1.05rem; }
+  .badge { background:var(--accent); color:#fff; padding:0.25rem 0.5rem; border-radius:6px; font-size:0.85rem; }
+  .meta { font-size:0.9rem; color:var(--muted); margin:0.25rem 0; }
+  .muted { color:var(--muted); margin:0.25rem 0; }
+  .footer { margin-top:0.4rem; font-size:0.9rem; color:#333; }
+  .rating { color:#b8860b; }
+  .contact { color:var(--muted); }
 </style>
