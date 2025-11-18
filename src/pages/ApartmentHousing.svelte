@@ -197,49 +197,49 @@ h2 {
   font-size: 0.95rem;
 }
 
-.advanced-filters-wrapper {
-  margin-bottom: 1rem;
-}
+  ul {
+    list-style: none;
+    padding: 0;
+  }
 
-/* CARDS */
-.cards-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-}
-@media (max-width: 1200px) { .cards-container { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 900px) { .cards-container { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .cards-container { grid-template-columns: 1fr; } }
+  li {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    margin-bottom: 1rem;
+    transition: 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
 
-.card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  border: 2px solid var(--border);
-  overflow: hidden;
-  cursor: pointer;
-  transition: box-shadow 0.25s ease;
-}
-.card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+  li:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent-light);
+  }
 
-.image-wrapper { position: relative; }
-.image-wrapper img { width: 100%; height: 150px; object-fit: cover; transition: transform 0.3s ease; }
-.card:hover .image-wrapper img { transform: scale(1.05); }
+  li h3 {
+    margin: 0 0 0.3rem;
+    color: var(--accent-light);
+  }
 
-.price-badge {
-  position: absolute; top: 8px; right: 8px;
-  background: rgba(79,70,229,0.9); color: white;
-  padding: 0.3rem 0.6rem; font-weight: 700;
-  border-radius: 8px; font-size: 0.85rem;
-}
+  .city {
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
 
-.placeholder { height: 150px; background: #eee; display: flex; justify-content: center; align-items: center; color: var(--text-muted); }
+  .beds {
+    border: 2px solid var(--accent-light);
+    background: var(--accent-bg);
+    padding: 0.35rem 0.6rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--accent-light);
+    transition: 0.2s;
+  }
 
-.card-content { padding: 0.8rem; }
-.card-content h3 { margin: 0 0 0.3rem; color: var(--accent-light); font-size: 1.05rem; }
-.city { color: var(--text-muted); margin-bottom: 0.5rem; }
-.beds {
-  display: inline-block; padding: 0.3rem 0.6rem;
-  background: var(--accent-bg); border: 1.5px solid var(--accent-light);
-  border-radius: 6px; font-size: 0.85rem; color: var(--accent-light); font-weight: 600;
-}
+  .beds:hover {
+    background: var(--accent-light);
+    color: white;
+  }
 </style>
