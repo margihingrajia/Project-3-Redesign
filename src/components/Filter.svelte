@@ -260,7 +260,7 @@
   on:click={openOverlay}
   title="Filters"
 >
-  <span class="label">Filters</span>
+  <span class="label">Advanced Filters</span>
   {#if appliedCount > 0}
     <span class="badge" aria-hidden="true">{appliedCount}</span>
   {/if}

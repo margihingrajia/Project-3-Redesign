@@ -166,7 +166,7 @@
     background: #ededed;
   }
 
-  .post-btn {
+  /* .post-btn {
     padding: 0.42rem 0.9rem;
     border-radius: 6px;
     cursor: pointer;
@@ -174,7 +174,7 @@
     color: white;
     border: none;
     font-size: 0.9rem;
-  }
+  } */
 
   .post-btn:hover {
     opacity: 0.9;
