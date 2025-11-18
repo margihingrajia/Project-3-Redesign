@@ -1,13 +1,13 @@
 <script>
   // import pictures for each category
-  import communityImg from "../.././Community.png";
-  import housingImg from "../.././Housing.png";
-  import jobsImg from "../.././Jobs.png";
-  import servicesImg from "../.././Services.png";
-  import forSaleImg from "../.././For Sale.png";
-  import discussionImg from "../.././Discussion Forums.png";
-  import gigsImg from "../.././Gigs.png";
-  import resumeImg from "../.././Resume.png";
+  import communityImg from "../../public/Community.png";
+  import housingImg from "../../public/Housing.png";
+  import jobsImg from "../../public/Jobs.png";
+  import servicesImg from "../../public/Services.png";
+  import forSaleImg from "../../public/For Sale.png";
+  import discussionImg from "../../public/Discussion Forums.png";
+  import gigsImg from "../../public/Gigs.png";
+  import resumeImg from "../../public/Resume.png";
 
   // category name + matching picture
   const categories = [
