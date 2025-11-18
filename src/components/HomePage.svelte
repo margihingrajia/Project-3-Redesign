@@ -10,6 +10,39 @@
   import resumeImg from "../../public/Resume.png";
 
   // category name + matching picture
+  let showMap = false;
+  let selectedLocation = "Select Location";
+
+  let mapContainer;   // Writable reference
+  let map;
+  let marker;
+
+  import { onMount } from "svelte";
+
+  // When map is opened, initialize once
+  $: if (showMap && mapContainer) {
+    initMap();
+  }
+
+  function initMap() {
+    if (map) return;   // Prevent reinitializing
+
+    map = L.map(mapContainer).setView([37.0902, -95.7129], 4);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+    }).addTo(map);
+
+    map.on("click", e => {
+      const { lat, lng } = e.latlng;
+
+      selectedLocation = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      showMap = false;
+
+      if (marker) marker.remove();
+      marker = L.marker([lat, lng]).addTo(map);
+    });
+  }
   const categories = [
     { name: "Community", image: communityImg },
     { name: "Housing", image: housingImg },
@@ -166,13 +199,22 @@
 
     <!-- right column -->
     <aside class="right">
-      <button class="filter">English ▼</button>
-      <button class="filter">Nearby ▼</button>
-      <button class="filter">US Cities ▼</button>
-      <button class="filter">US States ▼</button>
-      <button class="filter">Canada ▼</button>
-      <button class="filter">Worldwide ▼</button>
+      <button class="filter" on:click={() => showMap = true}>
+    {selectedLocation} ▼
+  </button>
     </aside>
+    {#if showMap}
+  <div class="map-overlay">
+    <div class="map-box">
+      <h3>Select Location</h3>
+      <div bind:this={mapContainer} class="map"></div>
+
+      <button class="close-btn" on:click={() => showMap = false}>
+        Close
+      </button>
+    </div>
+  </div>
+{/if}
   </div>
 
   <!-- footer -->
@@ -409,5 +451,52 @@
     color: #4b5563;
     text-decoration: none;
   }
-  
+
+  .filter {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fafafa;
+    cursor: pointer;
+  }
+
+  /* Overlay */
+  .map-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+  }
+
+  .map-box {
+    background: white;
+    padding: 16px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.3);
+  }
+
+  .map-box h3 {
+    margin: 0 0 8px;
+    text-align: center;
+  }
+
+  .map {
+    height: 300px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+
+  .close-btn {
+    width: 100%;
+    padding: 10px;
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+  }
 </style>
