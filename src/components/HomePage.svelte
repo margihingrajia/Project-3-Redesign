@@ -9,6 +9,40 @@
   import gigsImg from "../../public/Gigs.png";
   import resumeImg from "../../public/Resume.png";
 
+  // category name + matching picture
+  let showMap = false;
+  let selectedLocation = "Select Location";
+
+  let mapContainer;   // Writable reference
+  let map;
+  let marker;
+
+  import { onMount } from "svelte";
+
+  // When map is opened, initialize once
+  $: if (showMap && mapContainer) {
+    initMap();
+  }
+
+  function initMap() {
+    if (map) return;   // Prevent reinitializing
+
+    map = L.map(mapContainer).setView([37.0902, -95.7129], 4);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+    }).addTo(map);
+
+    map.on("click", e => {
+      const { lat, lng } = e.latlng;
+
+      selectedLocation = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      showMap = false;
+
+      if (marker) marker.remove();
+      marker = L.marker([lat, lng]).addTo(map);
+    });
+  }
   // CATEGORY → ROUTE MAP
   const routeMap = {
     "Community": "#/community",
@@ -399,5 +433,68 @@
     border: 1px solid #9ca3af;
     background: #f3f4f6;
     cursor: pointer;
+  }
+
+  /* footer */
+
+  .footer {
+    background: white;
+    border-top: 1px solid #d1d5db;
+    padding: 8px 16px 12px;
+    font-size: 13px;
+  }
+
+  .footer a {
+    margin-right: 12px;
+    color: #4b5563;
+    text-decoration: none;
+  }
+
+  .filter {
+    padding: 8px 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fafafa;
+    cursor: pointer;
+  }
+
+  /* Overlay */
+  .map-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+  }
+
+  .map-box {
+    background: white;
+    padding: 16px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.3);
+  }
+
+  .map-box h3 {
+    margin: 0 0 8px;
+    text-align: center;
+  }
+
+  .map {
+    height: 300px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+
+  .close-btn {
+    width: 100%;
+    padding: 10px;
+    background: #444;
+    color: white;
+    border: none;
+    border-radius: 6px;
   }
 </style>

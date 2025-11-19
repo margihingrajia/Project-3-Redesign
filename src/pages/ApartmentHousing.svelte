@@ -75,7 +75,7 @@
   <header class="top-bar">
     <div class="left">
       <button class="back" on:click={goBack}>← Back</button>
-      <h2>Apartment / Housing</h2>
+      <h2>Houses</h2>
       <button class="filter-btn" on:click={toggleFilters}>Filter</button>
     </div>
   </header>
@@ -183,8 +183,9 @@ h2 {
   margin: 0;
   font-size: 1.45rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-light); /* 🔥 Now perfectly matches purple theme */
 }
+
 
 /* BUTTONS */
 .filter-btn, .adv-filter-btn {
@@ -233,11 +234,10 @@ h2 {
     color: white;
   }
 
-  header h2 {
-    color: var(--accent);
-    font-size: 1.4rem;
-    font-weight: 700;
-  }
+header h2 {
+  color: var(--accent-light);
+}
+
 
   /* Filters */
   .filters {
