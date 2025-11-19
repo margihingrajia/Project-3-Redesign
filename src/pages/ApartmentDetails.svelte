@@ -70,7 +70,7 @@
 
     <!-- HEADER -->
     <div class="header-row">
-      <button class="back" on:click={goBack}>← Back</button>
+      <button class="back" on:click={goBack}>←</button>
 
       <div class="title-block">
         <h2>{apt.title}</h2>
@@ -241,8 +241,9 @@
 .title-block h2 {
   margin: 0;
   font-size: 1.8rem;
-  color: var(--accent);
+  color: var(--accent-light); /* NOW PURPLE */
 }
+
 .title-block h4 {
   margin-top: 4px;
   color: var(--text-muted);
@@ -253,14 +254,23 @@
   color: #16a34a;
 }
 
-/* Back button */
 .back {
   background: none;
   border: none;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   cursor: pointer;
-  color: var(--accent);
+  color: var(--accent-light);
+  font-weight: 600;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  transition: 0.2s ease-in-out;
 }
+
+.back:hover {
+  background: rgba(140, 73, 181, 0.12);
+}
+
+
 
 /* ======================================================
    CAROUSEL

@@ -74,7 +74,7 @@
   <!-- TOP BAR -->
   <header class="top-bar">
     <div class="left">
-      <button class="back" on:click={goBack}>← Back</button>
+      <button class="back" on:click={goBack}>←</button>
       <h2>Houses</h2>
       <button class="filter-btn" on:click={toggleFilters}>Filter</button>
     </div>
@@ -168,16 +168,21 @@ section {
 }
 
 .back {
-  background: var(--accent-bg);
-  border: 2px solid var(--accent-light);
-  padding: 0.4rem 0.7rem;
-  border-radius: 8px;
+  background: none;
+  border: none;
+  font-size: 1.05rem;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 0.9rem;
   color: var(--accent-light);
+  font-weight: 600;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  transition: 0.2s ease-in-out;
 }
-.back:hover { background: var(--accent-light); color: white; }
+
+.back:hover {
+  background: rgba(140, 73, 181, 0.12);
+}
+
 
 h2 {
   margin: 0;
