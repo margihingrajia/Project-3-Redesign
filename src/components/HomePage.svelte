@@ -120,8 +120,6 @@
 
     <div class="top-buttons">
       <button>Favs</button>
-      <button>Post</button>
-      <button>Acct</button>
     </div>
   </header>
 
